@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     random = {
-      source = "hashicorp/random"
+      source  = "hashicorp/random"
       version = "3.5.1"
     }
     aws = {
@@ -16,9 +16,15 @@ provider "aws" {
 }
 
 resource "random_string" "bucket_name" {
-  length           = 16
-  special          = true
-  override_special = "/@£$"
+  # Bucket naming rules https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html
+  length  = 16
+  special = false
+  lower   = true
+  upper   = false
+}
+
+resource "aws_s3_bucket" "name" {
+
 }
 
 output "random_bucket_name" {
