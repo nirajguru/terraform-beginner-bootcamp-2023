@@ -23,7 +23,8 @@ resource "random_string" "bucket_name" {
   upper   = false
 }
 
-resource "aws_s3_bucket" "name" {
+resource "aws_s3_bucket" "my_bucket" {
+  bucket = random_string.bucket_name.id
 
 }
 
