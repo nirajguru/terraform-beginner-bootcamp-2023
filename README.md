@@ -1,10 +1,18 @@
 # Terraform Beginner Bootcamp 2023
-- [Terraform Beginner Bootcamp 2023](#terraform-beginner-bootcamp-2023)
-  * [Terraform Basics](#terraform-basics)
+ * [Terraform Basics](#terraform-basics)
     + [Terraform Providers](#terraform-providers)
     + [Terraform state file](#terraform-state-file)
+    + [Validating input variables](#validating-input-variables)
     + [Terraform apply](#terraform-apply)
-  * [Terraform state file in Terraform Cloud](#terraform-state-file-in-terraform-cloud)
+    + [Order of precedence of Terraform variables](#order-of-precedence-of-terraform-variables)
+  * [Terraform Cloud](#terraform-cloud)
+    + [Terraform state in Terraform Cloud](#terraform-state-in-terraform-cloud)
+    + [Variables in Terraform Cloud](#variables-in-terraform-cloud)
+    + [Loading Terraform Input Variables](#loading-terraform-input-variables)
+  * [Terraform Module stucture](#terraform-module-stucture)
+  * [Dealing with Configuration Drift](#dealing-with-configuration-drift)
+    + [Manually fix the drift](#manually-fix-the-drift)
+    + [Terraform import](#terraform-import)
 
 ## Terraform Basics
 
@@ -84,5 +92,10 @@ Complete module structure is here:
       │   ├── exampleB/
       │   ├── .../
 ```
-  
+## Dealing with Configuration Drift
+### Manually fix the drift
+When infrastucture is manually modified or deleted using *ClickOps*, run terraform plan to let terraform detect the drift. Apply the plan to fix the drift
 
+### Terraform import
+Run `terraform import` to import the existing infrastructure. This also lets you bring the existing resources under Terraform management.
+[Terraform import documentation](https://developer.hashicorp.com/terraform/cli/import)
