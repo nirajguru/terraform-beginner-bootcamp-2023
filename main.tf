@@ -1,43 +1,14 @@
 terraform {
   cloud {
     organization = "nirajguru"
-
     workspaces {
       name = "terra-house-1"
     }
   }
-  required_providers {
-    random = {
-      source  = "hashicorp/random"
-      version = "3.5.1"
-    }
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
 }
 
-provider "aws" {
-  region = "us-east-1"
-}
-
-resource "random_string" "bucket_name" {
-  # Bucket naming rules https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html
-  length  = 16
-  special = false
-  lower   = true
-  upper   = false
-}
-
-resource "aws_s3_bucket" "my_bucket" {
-  bucket = random_string.bucket_name.id
-
-  tags = {
-    UserUuid = var.user_uuid
-  }
+module "terrahouse" {
+  source    = "./modules/terrahouse_aws"
+  user_uuid = "5adb9335-897f-4472-8015-1978c71aa7ba"
 
 }
-
-
-
