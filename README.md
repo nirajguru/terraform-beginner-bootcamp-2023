@@ -3,8 +3,14 @@
   * [Terraform Basics](#terraform-basics)
     + [Terraform Providers](#terraform-providers)
     + [Terraform state file](#terraform-state-file)
+    + [Validating input variables](#validating-input-variables)
     + [Terraform apply](#terraform-apply)
-  * [Terraform state file in Terraform Cloud](#terraform-state-file-in-terraform-cloud)
+    + [Order of precedence of Terraform variables](#order-of-precedence-of-terraform-variables)
+  * [Terraform Cloud](#terraform-cloud)
+    + [Terraform state in Terraform Cloud](#terraform-state-in-terraform-cloud)
+    + [Variables in Terraform Cloud](#variables-in-terraform-cloud)
+    + [Loading Terraform Input Variables](#loading-terraform-input-variables)
+  * [Terraform Module stucture](#terraform-module-stucture)
 
 ## Terraform Basics
 
