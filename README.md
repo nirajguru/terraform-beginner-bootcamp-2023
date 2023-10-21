@@ -66,6 +66,7 @@ At a minimum, the root module should have the following structure:
    - `terraform.tfvars` data to be loaded in the terraform project
    - `README.md` required for root modules
 It is a good idea to add a examples folder as well.
+The modules should be placed in a `modules` subdirectory when developing locally.
 
 [Official Module structure document](https://developer.hashicorp.com/terraform/language/modules/develop/structure)
 
