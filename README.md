@@ -44,6 +44,17 @@ The order of precedence for variable sources is as follows with **LATER** source
 4. Any *.auto.tfvars or *.auto.tfvars.json files, processed in lexical order of their filenames.
 5. Any -var and -var-file options on the command line, in the order they are provided.
 
+### Built in functions
+There are several built in [functions](https://developer.hashicorp.com/terraform/language/functions)
+Examples: use `fileexists(path)` to check if the file exists in the specified path. This can be used in the validation of input file as below:
+```sh 
+  validation {
+    condition = fileexists(${filepath}}"
+    )
+    error_message = "The file does not exist in the path"
+  }
+```
+
 ## Terraform Cloud
 ### Terraform state in Terraform Cloud
 - State file in terraform cloud is automatically versioned and protected.
@@ -64,8 +75,10 @@ At a minimum, the root module should have the following structure:
    - `variables.tf`  input variables
    - `outputs.tf`  stores outputs
    - `terraform.tfvars` data to be loaded in the terraform project
-   - `README.md` required for root modules
+   - `README.md` required for root modules.
+
 It is a good idea to add a examples folder as well.
+
 The modules should be placed in a `modules` subdirectory when developing locally.
 
 [Official Module structure document](https://developer.hashicorp.com/terraform/language/modules/develop/structure)
@@ -100,3 +113,25 @@ When infrastucture is manually modified or deleted using *ClickOps*, run terrafo
 ### Terraform import
 Run `terraform import` to import the existing infrastructure. This also lets you bring the existing resources under Terraform management.
 [Terraform import documentation](https://developer.hashicorp.com/terraform/cli/import)
+
+## Considerations when using ChatGPT or Claude AI to write Terraform
+
+LLMs such as ChatGPT may not be trained on the latest documentation and the examples it produces may be deprecated.
+
+## Working with files in Terraform
+in Terraform there is a special variables called `path` that allows us to reference local variables.
+
+[Special path variable documentation](https://developer.hashicorp.com/terraform/language/expressions/references#filesystem-and-workspace-info)
+
+Example, Use `${path.root}` to get the filesystem path of the root module
+```sh 
+resource "aws_s3_object" "index_file" {
+  bucket = aws_s3_bucket.my_bucket.bucket
+  key    = "index.html"
+  source = "${path.root}/public/index.html"
+  etag   = filemd5("${path.root}/public/index.html")
+}
+```
+
+Usually it is not recommended to copy files to S3 bucket using Terraform. A configuration management or CI CD tool should be used instead. Terraform should be used to stand up the infrastructure.
+
