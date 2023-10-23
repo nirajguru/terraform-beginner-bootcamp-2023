@@ -1,4 +1,4 @@
-# Terraform Beginner Bootcamp 2023
+# Terraform Bootcamp 2023
  * [Terraform Basics](#terraform-basics)
     + [Terraform Providers](#terraform-providers)
     + [Terraform state file](#terraform-state-file)
@@ -43,6 +43,16 @@ The order of precedence for variable sources is as follows with **LATER** source
 3. The terraform.tfvars.json file, if present.
 4. Any *.auto.tfvars or *.auto.tfvars.json files, processed in lexical order of their filenames.
 5. Any -var and -var-file options on the command line, in the order they are provided.
+
+### Local Block
+Local blocks allow you to define values that are within a module or a file but aren't available outside.
+It is like a code word that only your group of friends knows. So when you say this code when you are with your friends, they know what you are talking about. But when you go outside your group, the others won't know. Similarly, the values in local block are scoped within a module or a terraform config file.
+Examples:
+```sh
+locals{
+  friends_code_word = "pineapple"
+}
+```
 
 ### Built in functions
 There are several built in [functions](https://developer.hashicorp.com/terraform/language/functions)
@@ -135,3 +145,23 @@ resource "aws_s3_object" "index_file" {
 
 Usually it is not recommended to copy files to S3 bucket using Terraform. A configuration management or CI CD tool should be used instead. Terraform should be used to stand up the infrastructure.
 
+## Terraform Data Sources
+Terraform data sources allow you to lookup information of the resources that are not directly managed by Terraform. Example, you can get the available AMIs within an account.
+
+Data source is called within a `data` block. Below code will get the account number:
+```sh
+data "aws_caller_identity" "current" {}
+
+output "account_id" {
+  value = data.aws_caller_identity.current.account_id
+} 
+```
+
+## Working with JSON
+We use `jsonencode()` for creating IAM policy in json format inline in the Terraform config file.
+```terraform
+jsonencode({"name"="niraj"})
+{"name":"niraj"}
+```
+[jsonencode documentation](https://developer.hashicorp.com/terraform/language/functions/jsonencode)
+It is important to note that equal sign in hcl is replaced by : in json.
