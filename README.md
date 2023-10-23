@@ -1,18 +1,27 @@
 # Terraform Bootcamp 2023
- * [Terraform Basics](#terraform-basics)
+  * [Terraform Basics](#terraform-basics)
     + [Terraform Providers](#terraform-providers)
     + [Terraform state file](#terraform-state-file)
     + [Validating input variables](#validating-input-variables)
     + [Terraform apply](#terraform-apply)
     + [Order of precedence of Terraform variables](#order-of-precedence-of-terraform-variables)
+    + [Local Block](#local-block)
+    + [Built in functions](#built-in-functions)
   * [Terraform Cloud](#terraform-cloud)
     + [Terraform state in Terraform Cloud](#terraform-state-in-terraform-cloud)
     + [Variables in Terraform Cloud](#variables-in-terraform-cloud)
     + [Loading Terraform Input Variables](#loading-terraform-input-variables)
+    + [Variable Validation with Condition expression](#variable-validation-with-condition-expression)
   * [Terraform Module stucture](#terraform-module-stucture)
   * [Dealing with Configuration Drift](#dealing-with-configuration-drift)
     + [Manually fix the drift](#manually-fix-the-drift)
     + [Terraform import](#terraform-import)
+  * [Considerations when using ChatGPT or Claude AI to write Terraform](#considerations-when-using-chatgpt-or-claude-ai-to-write-terraform)
+  * [Working with files in Terraform](#working-with-files-in-terraform)
+  * [Terraform Data Sources](#terraform-data-sources)
+  * [Working with JSON](#working-with-json)
+  * [Changing the lifecycle of resources](#changing-the-lifecycle-of-resources)
+  * [Null resource in Terraform](#null-resource-in-terraform)
 
 ## Terraform Basics
 
@@ -57,7 +66,7 @@ locals{
 ### Built in functions
 There are several built in [functions](https://developer.hashicorp.com/terraform/language/functions)
 Examples: use `fileexists(path)` to check if the file exists in the specified path. This can be used in the validation of input file as below:
-```sh 
+```hcl 
   validation {
     condition = fileexists(${filepath}}"
     )
@@ -77,6 +86,19 @@ Examples: use `fileexists(path)` to check if the file exists in the specified pa
 ### Loading Terraform Input Variables
 Use `-var` flag with terraform plan or terraform apply to set an input variable or override a variable in the tfvars file. Example: `terraform plan -var user_uuid="5adb9335-897f-4472-8015-1978c71aa7ba"`
 
+### Variable Validation with Condition expression
+The input variables can be validated by using the `condition` expression.
+[Variable Validation](https://dev.to/pwd9000/terraform-variable-validation-47ka#:~:text=Understanding%20Terraform%20Variable%20Validation&text=There%20are%20two%20key%20components,condition%20is%20a%20boolean%20expression.)
+Example code here that checks variable content_version is a positive integer
+```hcl
+variable "content_version" {
+  type = number
+  validation {
+    condition     = var.content_version > 0 && floor(var.content_version) == var.content_version
+    error_message = "The content_version value must be a positive integer."
+  }
+ }
+```
 
 ## Terraform Module stucture
 At a minimum, the root module should have the following structure:
@@ -134,7 +156,7 @@ in Terraform there is a special variables called `path` that allows us to refere
 [Special path variable documentation](https://developer.hashicorp.com/terraform/language/expressions/references#filesystem-and-workspace-info)
 
 Example, Use `${path.root}` to get the filesystem path of the root module
-```sh 
+```hcl 
 resource "aws_s3_object" "index_file" {
   bucket = aws_s3_bucket.my_bucket.bucket
   key    = "index.html"
@@ -149,7 +171,7 @@ Usually it is not recommended to copy files to S3 bucket using Terraform. A conf
 Terraform data sources allow you to lookup information of the resources that are not directly managed by Terraform. Example, you can get the available AMIs within an account.
 
 Data source is called within a `data` block. Below code will get the account number:
-```sh
+```hcl
 data "aws_caller_identity" "current" {}
 
 output "account_id" {
@@ -159,9 +181,28 @@ output "account_id" {
 
 ## Working with JSON
 We use `jsonencode()` for creating IAM policy in json format inline in the Terraform config file.
-```terraform
+```hcl
 jsonencode({"name"="niraj"})
 {"name":"niraj"}
 ```
 [jsonencode documentation](https://developer.hashicorp.com/terraform/language/functions/jsonencode)
 It is important to note that equal sign in hcl is replaced by : in json.
+
+## Changing the lifecycle of resources
+[Lifecycle meta-arguments](https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle) describes the general lifecycle of resources.
+Available lifecycle arguments:
+- `create_before_destroy`
+- `prevent_destroy`
+- `ignore_changes` e.g. you added tags and you don't want the resource to be updated
+- `replace_triggered_by`
+
+
+## Null resource in Terraform
+Null resource is now **DEPRECATED** by `terraform_data`.
+
+You would use `null` resource when you don't want Terraform to create or update any real infrastrcture but you want some custom actions in the middle of Terraform flow. For example,
+- Run a script that sets up some variables required later
+- Add delays before the next step runs
+- To trigger when some external resource gets updated
+- To run a provisioning tool like Ansible on your servers
+
