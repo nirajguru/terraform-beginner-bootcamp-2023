@@ -8,3 +8,12 @@ variable "user_uuid" {
     error_message = "The uid variable must be either a numeric UID or a valid string."
   }
 }
+
+variable "content_version" {
+  type = number
+  validation {
+    condition     = var.content_version > 0 && floor(var.content_version) == var.content_version
+    error_message = "The content_version value must be a positive integer."
+  }
+
+}

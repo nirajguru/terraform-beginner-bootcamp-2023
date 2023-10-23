@@ -31,7 +31,12 @@ resource "aws_s3_object" "index_file" {
   source = "${path.root}/public/index.html"
   etag   = filemd5("${path.root}/public/index.html")
   content_type = "text/html"
+  lifecycle {
+    ignore_changes = [etag]
+    replace_triggered_by = [ terraform_data.content_version.output ]
+    } 
 }
+
 
 resource "aws_s3_object" "error_file" {
   bucket = aws_s3_bucket.my_bucket.bucket
@@ -39,6 +44,10 @@ resource "aws_s3_object" "error_file" {
   source = "${path.root}/public/error.html"
   etag   = filemd5("${path.root}/public/error.html")
   content_type = "text/html"
+  lifecycle {
+    ignore_changes = [ etag ]
+    replace_triggered_by = [ terraform_data.content_version.output ]
+  }
 
 }
 
@@ -61,4 +70,8 @@ resource "aws_s3_bucket_policy" "my_bucket_policy" {
         }
     }
   })
+}
+
+resource "terraform_data" "content_version" {
+  input = var.content_version  
 }
