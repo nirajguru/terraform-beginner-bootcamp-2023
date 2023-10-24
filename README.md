@@ -73,6 +73,9 @@ Examples: use `fileexists(path)` to check if the file exists in the specified pa
     error_message = "The file does not exist in the path"
   }
 ```
+### Fileset()
+You can use fileset() to list out all the files in a directory.
+`fileset("$path.root","*")`
 
 ## Terraform Cloud
 ### Terraform state in Terraform Cloud
@@ -218,3 +221,9 @@ This will execute command on the machine running Terraform commands.
 ### Remote-exec
 
 This will execute command on the target machines. We need to provide credentials/ssh authentication to login to machine.
+One of the use case can be copying files from local machines running Terraform to the remote machine (can be provisioned by Terraform)
+
+## For each meta argument
+For each allows us to iterate over different data types. This is useful when there are multiple resources are required.
+[For each](https://developer.hashicorp.com/terraform/language/meta-arguments/for_each)
+For lists, `each.key` is sufficient to iterate. For Maps, both `each.key` and `each.value` are required.
