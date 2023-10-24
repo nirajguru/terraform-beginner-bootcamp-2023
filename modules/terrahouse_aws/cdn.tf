@@ -97,3 +97,16 @@ resource "aws_cloudfront_origin_access_control" "default" {
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
 }
+
+resource "terraform_data" "invalidate_cache" {
+  triggers_replace = terraform_data.content_version.output
+
+  # https://developer.hashicorp.com/terraform/language/expressions/strings#heredoc-strings
+  provisioner "local-exec" {
+    command = "aws --version"
+    # command = <<COMMAND
+    # aws cloudfront create-invalidation --distribution-id ${aws_cloudfront_distribution.s3_distribution.id} \
+    # --paths "/*"
+    # COMMAND
+  }
+}
