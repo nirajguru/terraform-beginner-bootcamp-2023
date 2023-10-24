@@ -206,3 +206,15 @@ You would use `null` resource when you don't want Terraform to create or update 
 - To trigger when some external resource gets updated
 - To run a provisioning tool like Ansible on your servers
 
+## Provisioners
+Provisioners allow to execute commands on VMs e.g. AWS CLI Command.
+This is usually not recommended as Terraform should be used to manage the Infrastructure. The configuration management should be done by configuration management tools like Ansible, Puppet, Chef, etc.
+Provisioners should be used as a last resort.
+
+### Local-exec
+
+This will execute command on the machine running Terraform commands.
+
+### Remote-exec
+
+This will execute command on the target machines. We need to provide credentials/ssh authentication to login to machine.
