@@ -77,7 +77,23 @@ Examples: use `fileexists(path)` to check if the file exists in the specified pa
 You can use fileset() to list out all the files in a directory.
 `fileset("$path.root","*")`
 
+## Terraform Operators
+[Terraform operators](https://developer.hashicorp.com/terraform/language/expressions/operators) are expressions that let you compare values, combine conditions and build logic.
+
+```terraform
+9 == 9 ? true : false
+true
+```
+
 ## Terraform Cloud
+Terraform Cloud is the SaaS version of Terraform.
+Using Terraform cloud has the advantages:
+ - Manages the state file
+ - Gives the ability to execute local-exec
+ - Free to create account
+ - Generous free tier where upto 500 resources per month can be managed
+ 
+
 ### Terraform state in Terraform Cloud
 - State file in terraform cloud is automatically versioned and protected.
 - Username/password shouldn't be in the state file.
