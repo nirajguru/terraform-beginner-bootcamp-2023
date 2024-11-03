@@ -30,7 +30,7 @@ Terraform providers are plugins that help Terraform talk to different platforms 
 
 
 ### Terraform state file
-The state file contains information about the current state of your file.The file name is `terraform.tfstate`. This file **should not be committed** to source code repository as it might contain sensitive information.
+The state file contains information about the current state of your infrastructure.The file name is `terraform.tfstate`. This file **should not be committed** to source code repository as it might contain sensitive information.
 
 ### Validating input variables
 Use the 'validation' block within the variables block
